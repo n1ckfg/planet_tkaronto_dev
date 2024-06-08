@@ -88,21 +88,27 @@ function initLatk() {
 initLatk()
 
 function deleteFromLatk() {
-	try {
+	//try {
+	if (latk.layers[currentLayer].frames[currentFrame].strokes.length === 1) {
+		latk.layers[currentLayer].frames[currentFrame].strokes[0].points = []
+	} else {
 		latk.layers[currentLayer].frames[currentFrame].strokes.splice(latk.layers[currentLayer].frames[currentFrame].strokes.length - 1, 1)
+	}
 
-		if (latk.layers[currentLayer].frames[currentFrame].strokes.length < 1) {
-			latk.layers[currentLayer].frames.splice(currentFrame, 1)
-			changeFrame(-1)
-		}
+	if (latk.layers[currentLayer].frames[currentFrame].strokes.length < 1 && latk.layers[currentLayer].frames.length > 1) {
+		latk.layers[currentLayer].frames.splice(currentFrame, 1)
+		changeFrame(-1)
+	}
 
+		/*
 		if (latk.layers[currentLayer].frames.length < 1) {
 			latk.layers.splice(currentLayer, 1)
 			changeLayer(-1)
 		}
-	} catch (e) {
-		initLatk()
-	}
+		*/
+	//} catch (e) {
+		//initLatk()
+	//}
 }
 
 function changeLayer(diff) {
@@ -112,7 +118,7 @@ function changeLayer(diff) {
 	} else if (currentLayer < 0) {
 		currentLayer = latk.layers.length - 1
 	}
-	lastFrameOfAll
+	//lastFrameOfAll
 }
 
 function changeFrame(diff) {
@@ -125,7 +131,7 @@ function changeFrame(diff) {
 }
 
 p.mousePressed = () => {
-	clicked = true;
+	clicked = true
 }
 
 p.mouseReleased = () => {
