@@ -1,0 +1,29 @@
+﻿Planet Tkaronto links
+
+
+240607
+
+
+
+
+240603
+p5.js web editor with Hydra code
+https://editor.p5js.org/n1ckfg/sketches/0qcXmkLrn
+
+
+Hydra with p5.js shape drawing
+https://hydra.ojack.xyz/?sketch_id=LbHpw807QpV9Eif8
+https://gist.github.com/n1ckfg/aec8a770e26a320c5b6e2bccf46ac8e8
+
+
+Hydra Latk loader
+https://hydra.ojack.xyz/?sketch_id=UbIdu4MYbbHMN7CF
+https://gist.github.com/n1ckfg/63996c967e2bc29172937b35e29e3ef5
+
+
+Resources
+Hydra cheatsheet
+https://github.com/hydra-synth/hydra/blob/main/README.md
+https://www.clipsoundandmusic.uk/hydra-tutorial-a-beginners-guide-to-live-coding-visuals/
+https://www.nadyaprimak.com/blog/creativity/hydra-tutorial-live-coding-visuals/
+https://hydra.ojack.xyz/docs/docs/learning/getting-started/

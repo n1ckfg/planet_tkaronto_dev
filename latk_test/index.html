@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<style>
+			body {
+				background: black;
+			}
+		</style>
+		<script src="https://unpkg.com/p5@1.9.1/lib/p5.min.js"></script>
+		<script src="https://unpkg.com/latk@1.0.3/latk.js"></script>
+	</head>
+
+	<body>
+		<script>
+			let currentFrame = 0;
+			let currentLayer = 0;
+			let lastFrameOfAll = 0;
+			let marktime = 0;
+			const fps = (1.0 / 12.0) * 1000.0;
+			let latk;
+			let isPlaying = false;
+			let clicked = false;
+			let tempStroke = new LatkStroke();
+
+			function setup() {
+				createCanvas(1024, 512, WEBGL);
+				
+				initLatk();
+
+				noFill();
+				strokeWeight(4);
+			}
+
+			function initLatk() {
+				latk = new Latk(init=true);
+				currentFrame = 0;
+				currentLayer = 0;
+				setLastFrameOfAll();
+			}
+
+			function setLastFrameOfAll() {
+				lastFrameOfAll = 0;
+				for (let layer of latk.layers) {
+					if (layer.frames.length-1 > lastFrameOfAll) {
+						lastFrameOfAll = layer.frames.length-1;
+					}
+				}
+			}
+
+			function deleteFromLatk() {
+				try {
+					latk.layers[currentLayer].frames[currentFrame].strokes.splice(latk.layers[currentLayer].frames[currentFrame].strokes.length-1, 1);
+
+					if (latk.layers[currentLayer].frames[currentFrame].strokes.length < 1) {				
+						latk.layers[currentLayer].frames.splice(currentFrame, 1);
+						changeFrame(-1);
+					}
+
+					if (latk.layers[currentLayer].frames.length < 1) {
+						latk.layers.splice(currentLayer, 1);
+						changeLayer(-1);
+					}
+				} catch (e) {
+					initLatk();
+				}
+			}
+
+			function changeLayer(diff) {
+				currentLayer += diff;
+				if (currentLayer > latk.layers.length-1) {
+					currentLayer = 0;				
+				} else if (currentLayer < 0) {
+					currentLayer = latk.layers.length-1;					
+				}
+				setLastFrameOfAll();
+			}
+
+			function changeFrame(diff) {
+				currentFrame += diff;
+				if (currentFrame > latk.layers[currentLayer].frames.length-1) {
+					currentFrame = 0;
+				} else if (currentFrame < 0) {
+					currentFrame = latk.layers[currentLayer].frames.length-1;
+				}
+			}
+
+			function mousePressed() {
+			  	clicked = true;
+			}
+
+			function mouseReleased() {
+			  	clicked = false
+				latk.layers[currentLayer].frames[currentFrame].strokes.push(tempStroke);
+		 		tempStroke = new LatkStroke();
+			}
+
+			function keyPressed() {
+				if (latk.ready) {
+					console.log(key);
+					switch (key) {
+						case "a":
+							initLatk();
+						case "p":
+							isPlaying = !isPlaying;
+							break;
+						case "f":
+							latk.layers[currentLayer].frames.push(new LatkFrame(latk.layers[currentLayer].frames.length));
+							currentFrame = latk.layers[currentLayer].frames.length-1;
+							setLastFrameOfAll();
+							break;
+						/*
+						case "l":
+							latk.layers.push(new LatkLayer("layer" + latk.layers.length));
+							currentLayer = latk.layers.length-1;
+							currentFrame = 0;
+							latk.layers[currentLayer].frames.push(new LatkFrame());
+							break;*/
+						case "z":
+							deleteFromLatk();
+							break;
+						case "ArrowUp":
+							changeLayer(1);
+							break;
+						case "ArrowDown":
+							changeLayer(-1);
+							break;
+						case "ArrowLeft":
+							changeFrame(-1);
+							break;
+						case "ArrowRight":
+							changeFrame(1);
+							break;
+					}		
+				}
+			}
+
+			function draw() {
+				background(0);
+
+				if (latk.ready) {
+					for (let layer of latk.layers) {
+						for (let strokeObj of layer.frames[currentFrame].strokes) {
+							stroke(255); //strokeObj.color[0] * 255, strokeObj.color[1] * 255, strokeObj.color[2] * 255);
+							noFill();
+							beginShape();
+							for (let point of strokeObj.points) {
+								x = point.co[0] - width/2;
+								y = point.co[1] - height/2;
+								z = point.co[2];
+								vertex(x, y, z);
+							}
+							endShape();
+						}
+						
+						if (layer.frames.length > lastFrameOfAll) lastFrameOfAll = layer.frames.length;
+					}
+
+					t = millis();
+					if (isPlaying && t > marktime + fps) {
+						currentFrame++;
+						if (currentFrame > lastFrameOfAll-1) currentFrame = 0 % lastFrameOfAll;
+						marktime = t;
+					}
+				}
+
+				if (mouseIsPressed) {
+					tempStroke.points.push(new LatkPoint([mouseX, mouseY, 0]));
+				}
+
+				stroke(255,127,0);
+				beginShape();
+				for (let point of tempStroke.points) {
+					x = point.co[0] - width/2;
+					y = point.co[1] - height/2;
+					z = point.co[2];
+					vertex(x, y, z);
+				}
+				endShape();
+			}
+		</script>
+	</body>
+
+</html>
