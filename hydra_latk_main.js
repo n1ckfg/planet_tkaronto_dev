@@ -100,6 +100,7 @@ function deleteFromLatk() {
 }
 
 function changeFrame(diff) {
+	isPlaying = false
 	currentFrame += diff
 	if (currentFrame > latk.layers[currentLayer].frames.length - 1) {
 		currentFrame = 0
@@ -162,8 +163,8 @@ p.draw = () => {
 			for (let strokeObj of layer.frames[currentFrame].strokes) {
 				p.beginShape()
 				for (let point of strokeObj.points) {
-					x = point.co[0] - p.width/2
-					y = point.co[1] - p.height/2
+					x = point.co[0]
+					y = point.co[1]
 					p.vertex(x, y)
 				}
 				p.endShape()
@@ -181,15 +182,17 @@ p.draw = () => {
 	}
 
 	if (p.mouseIsPressed) {
-		tempStroke.points.push(new LatkPoint([p.mouseX, p.mouseY, 0]))
+		let x = p.mouseX - p.width/2
+		let y = p.mouseY - p.height/2
+		tempStroke.points.push(new LatkPoint([x, y, 0]))
 	}
 
 	p.strokeWeight(5)
 	p.stroke(newColor)
 	p.beginShape()
 	for (let point of tempStroke.points) {
-		x = point.co[0] - p.width/2
-		y = point.co[1] - p.height/2
+		x = point.co[0]
+		y = point.co[1]
 		p.vertex(x, y)
 	}
 	p.endShape()
