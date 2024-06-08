@@ -75,3 +75,7 @@ https://hydra.ojack.xyz/functions/
 .add(o0, 0.1))
 .add(osc(20,0.01,1)
 .color(0,0.8,1))
+
+// 5
+.diff(src(o0).rotate([-0.012, 0.01, -0.002, 0]).scrollY(0,[-1 / 199800, 0].fast(0.7)))
+
