@@ -63,11 +63,10 @@ latk = new Latk(init = true)
 isPlaying = false
 clicked = false
 tempStroke = new LatkStroke()
-
+mainColor = p.color(255, 192)
+newColor = p.color(255, 127, 0, 255)
 
 p.noFill()
-p.strokeWeight(4)
-p.stroke(255)
 
 function setLastFrameOfAll() {
 	lastFrameOfAll = 0;
@@ -88,7 +87,6 @@ function initLatk() {
 initLatk()
 
 function deleteFromLatk() {
-	//try {
 	if (latk.layers[currentLayer].frames[currentFrame].strokes.length === 1) {
 		latk.layers[currentLayer].frames[currentFrame].strokes[0].points = []
 	} else {
@@ -99,26 +97,6 @@ function deleteFromLatk() {
 		latk.layers[currentLayer].frames.splice(currentFrame, 1)
 		changeFrame(-1)
 	}
-
-		/*
-		if (latk.layers[currentLayer].frames.length < 1) {
-			latk.layers.splice(currentLayer, 1)
-			changeLayer(-1)
-		}
-		*/
-	//} catch (e) {
-		//initLatk()
-	//}
-}
-
-function changeLayer(diff) {
-	currentLayer += diff
-	if (currentLayer > latk.layers.length - 1) {
-		currentLayer = 0
-	} else if (currentLayer < 0) {
-		currentLayer = latk.layers.length - 1
-	}
-	//lastFrameOfAll
 }
 
 function changeFrame(diff) {
@@ -155,13 +133,6 @@ p.keyPressed = () => {
 				currentFrame = latk.layers[currentLayer].frames.length - 1
 				setLastFrameOfAll()
 				break
-				/*
-				case "l":
-					latk.layers.push(new LatkLayer("layer" + latk.layers.length))
-					currentLayer = latk.layers.length-1
-					currentFrame = 0
-					latk.layers[currentLayer].frames.push(new LatkFrame())
-					break*/
 			case "z":
 				deleteFromLatk()
 				break
@@ -185,16 +156,15 @@ p.draw = () => {
 	p.background(0)
 
 	if (latk.ready) {
+		p.strokeWeight(5)
+		p.stroke(mainColor)
 		for (let layer of latk.layers) {
 			for (let strokeObj of layer.frames[currentFrame].strokes) {
-				p.stroke(255) //strokeObj.color[0] * 255, strokeObj.color[1] * 255, strokeObj.color[2] * 255)
-				p.noFill()
 				p.beginShape()
 				for (let point of strokeObj.points) {
 					x = point.co[0] - p.width/2
 					y = point.co[1] - p.height/2
-					z = point.co[2]
-					p.vertex(x, y, z)
+					p.vertex(x, y)
 				}
 				p.endShape()
 			}
@@ -211,16 +181,16 @@ p.draw = () => {
 	}
 
 	if (p.mouseIsPressed) {
-		tempStroke.points.push(new LatkPoint(co=[p.mouseX, p.mouseY, 0]))
+		tempStroke.points.push(new LatkPoint([p.mouseX, p.mouseY, 0]))
 	}
 
-	p.stroke(255,127,0)
+	p.strokeWeight(5)
+	p.stroke(newColor)
 	p.beginShape()
 	for (let point of tempStroke.points) {
 		x = point.co[0] - p.width/2
 		y = point.co[1] - p.height/2
-		z = point.co[2]
-		p.vertex(x, y, z)
+		p.vertex(x, y)
 	}
 	p.endShape()
 }
@@ -231,4 +201,3 @@ s0.init({
 
 src(s0)
 	.out()
-//src(s0).repeat(4, 4).scroll(0.1,-0.3,0.05,0.05).out()

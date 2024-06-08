@@ -1,4 +1,4 @@
-﻿1Hydra cheatsheet
+1Hydra cheatsheet
 
 
 Chrome fullscreen
@@ -10,7 +10,7 @@ Mac: Fn + F, Cmd-Shift-F
 
 https://github.com/hydra-synth/hydra/blob/main/README.md
 https://github.com/ojack/hydra/blob/master/docs/funcs.md
-
+https://hydra.ojack.xyz/functions/
 
 // 1a
 .modulateScale(osc(8).rotate(Math.sin(time)), 0.5)
